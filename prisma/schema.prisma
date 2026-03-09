@@ -22,7 +22,9 @@ enum TransactionType {
 model User {
   id        String    @id @default(cuid())
   phone     String    @unique
-  username  String    @unique
+  firstName String
+  lastName  String
+  username  String?   @unique
   avatar    String?
   accounts  Account[]
   createdAt DateTime  @default(now())
@@ -59,6 +61,5 @@ model Category {
   name         String
   emoji        String
   isSystem     Boolean       @default(false)
-  userId       String?
   transactions Transaction[]
 }
