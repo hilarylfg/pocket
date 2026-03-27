@@ -1,8 +1,7 @@
 import 'dotenv/config'
 
-import { Prisma } from '@/app/generated/prisma/client'
-
 import { prisma } from '@/src/lib'
+import {type Prisma} from "@/prisma/generated/client";
 
 const systemCategories: Prisma.CategoryCreateInput[] = [
 	{ name: 'Зарплата', emoji: '💰', isSystem: true },
