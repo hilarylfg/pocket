@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { ErrorCode, getCurrentUser } from '@/src/lib'
+import { ErrorCode, getCurrentUser, prisma } from '@/src/lib'
 
 export async function GET(request: Request) {
 	const user = await getCurrentUser()
@@ -16,5 +16,12 @@ export async function GET(request: Request) {
 		)
 	}
 
-	return NextResponse.json({ user })
+	const accounts = await prisma.account.findMany({
+		where: { userId: user.id },
+		include: {
+			transactions: { take: 3, orderBy: { createdAt: 'desc' } }
+		}
+	})
+
+	return NextResponse.json({ accounts })
 }

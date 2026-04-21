@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { twMerge } from 'tailwind-merge'
 
 import { User } from '@/prisma/generated/client'
+import {SessionUser} from "@/src/types/auth.types";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -22,14 +23,15 @@ export async function createSessionToken(user: User): Promise<string> {
 		.sign(getSecret())
 }
 
-export async function verifySessionToken(token: string): Promise<User | null> {
+export async function verifySessionToken(token: string): Promise<SessionUser | null> {
 	try {
 		const { payload } = await jwtVerify(token, getSecret())
 
 		if (
 			typeof payload.id !== 'string' ||
 			typeof payload.phone !== 'string' ||
-			typeof payload.avatar !== 'string' ||
+            typeof payload.username !== 'string' ||
+            typeof payload.avatar !== 'string' ||
 			typeof payload.firstName !== 'string' ||
 			typeof payload.lastName !== 'string'
 		) {
@@ -39,6 +41,7 @@ export async function verifySessionToken(token: string): Promise<User | null> {
 		return {
 			id: payload.id,
 			phone: payload.phone,
+            username: payload.username,
 			avatar: payload.avatar,
 			firstName: payload.firstName,
 			lastName: payload.lastName

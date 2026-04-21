@@ -3,7 +3,7 @@ import { prisma } from '@/src/lib'
 export default async function Home() {
 	const debit = await prisma.account.findFirst({
 		where: {
-			userId: 'cmmjfxopm000b1shicsi3d42y'
+			userId: 'cmmj8b663000beoesb74gm8h1'
 		}
 	})
 

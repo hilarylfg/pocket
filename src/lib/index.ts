@@ -1,3 +1,6 @@
 export { cn } from './utils'
 export { prisma } from './prisma'
 export { api } from './instance.api'
+export { getCurrentUser } from './auth'
+export { ErrorCode, type ApiError } from './api-error'
+export { ok, err, type Result } from './result'

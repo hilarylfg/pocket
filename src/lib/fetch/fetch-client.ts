@@ -1,5 +1,5 @@
-import { FetchError } from './fetch-error'
 import { RequestOptions, TypeSearchParams } from './fetch-types'
+import { type ApiError, ErrorCode, type Result } from '@/src/lib'
 
 export class FetchClient {
 	private baseUrl: string
@@ -45,7 +45,7 @@ export class FetchClient {
 		endpoint: string,
 		method: RequestInit['method'],
 		options: RequestOptions = {}
-	) {
+	): Promise<Result<T, ApiError>> {
 		let url = `${this.baseUrl}/${endpoint}`
 
 		if (options.params) {
@@ -62,25 +62,44 @@ export class FetchClient {
 			}
 		}
 
-		const response: Response = await fetch(url, config)
+		try {
+			const response: Response = await fetch(url, config)
 
-		if (!response.ok) {
-			const error = (await response.json()) as
-				| { message: string }
-				| undefined
-			throw new FetchError(
-				response.status,
-				error?.message || response.statusText
-			)
-		}
+			const body = response.headers
+				.get('Content-Type')
+				?.includes('application/json')
+				? await response.json()
+				: await response.text()
 
-		if (
-			response.headers.get('Content-Type')?.includes('application/json')
-		) {
-			return (await response.json()) as unknown as T
-		} else {
-			return (await response.text()) as unknown as T
+			if (!response.ok) {
+				const error: ApiError = {
+					code: this.mapStatusToCode(response.status),
+					message:
+						(body as { message?: string })?.message ||
+						response.statusText,
+					status: response.status
+				}
+				return { ok: false, error }
+			}
+
+			return { ok: true, data: body as T }
+		} catch (e) {
+			const error: ApiError = {
+				code: ErrorCode.NETWORK,
+				message: e instanceof Error ? e.message : 'Network error',
+				status: 0
+			}
+			return { ok: false, error }
 		}
+	}
+
+	private mapStatusToCode(status: number): ErrorCode {
+		if (status === 401) return ErrorCode.AUTH
+		if (status === 403) return ErrorCode.FORBIDDEN
+		if (status === 404) return ErrorCode.NOT_FOUND
+		if (status === 400) return ErrorCode.BAD_REQUEST
+		if (status >= 500) return ErrorCode.SERVER
+		return ErrorCode.BAD_REQUEST
 	}
 
 	public get<T>(
