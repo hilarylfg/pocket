@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bank Web App — Wireframe</title>
+	<script src="https://unpkg.com/lucide@latest"></script>
+	<style>
+        /* ============================================
+           DESIGN SYSTEM — GRAYSCALE WIREFRAME
+           ============================================ */
+        :root {
+            /* Palette */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #ebebeb;
+            --bg-elevated: #ffffff;
+            --bg-inverse: #1a1a1a;
+
+            --text-primary: #0a0a0a;
+            --text-secondary: #525252;
+            --text-tertiary: #737373;
+            --text-inverse: #ffffff;
+            --text-muted: #a3a3a3;
+
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-default: rgba(0, 0, 0, 0.1);
+            --border-strong: rgba(0, 0, 0, 0.2);
+
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.04), 0 2px 4px -2px rgba(0,0,0,0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.04), 0 4px 6px -4px rgba(0,0,0,0.02);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+
+            /* Spacing */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+
+            /* Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'SF Mono', Monaco, monospace;
+
+            --text-xs: 11px;
+            --text-sm: 13px;
+            --text-base: 15px;
+            --text-lg: 17px;
+            --text-xl: 20px;
+            --text-2xl: 24px;
+            --text-3xl: 30px;
+            --text-4xl: 38px;
+
+            --weight-normal: 400;
+            --weight-medium: 500;
+            --weight-semibold: 600;
+            --weight-bold: 700;
+
+            --leading-tight: 1.2;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.65;
+
+            /* Layout */
+            --sidebar-width: 256px;
+            --header-height: 64px;
+            --bottom-nav-height: 64px;
+
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-family: var(--font-sans);
+            font-size: var(--text-base);
+            line-height: var(--leading-normal);
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: var(--radius-full);
+        }
+
+        /* ============================================
+           UTILITIES
+           ============================================ */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-secondary) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: var(--radius-md);
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ============================================
+           LAYOUT SHELL
+           ============================================ */
+        .app-shell {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            grid-template-areas:
+                "sidebar header"
+                "sidebar main";
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           SIDEBAR
+           ============================================ */
+        .sidebar {
+            grid-area: sidebar;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: transform var(--transition-slow);
+        }
+
+        .sidebar__brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            gap: var(--space-3);
+        }
+
+        .sidebar__logo {
+            width: 32px;
+            height: 32px;
+            background: var(--text-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-inverse);
+        }
+
+        .sidebar__brand-text {
+            font-size: var(--text-lg);
+            font-weight: var(--weight-bold);
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar__nav {
+            flex: 1;
+            padding: var(--space-4) var(--space-3);
+            overflow-y: auto;
+        }
+
+        .sidebar__section {
+            margin-bottom: var(--space-6);
+        }
+
+        .sidebar__label {
+            font-size: var(--text-xs);
+            font-weight: var(--weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0 var(--space-3);
+            margin-bottom: var(--space-2);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 2px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--text-primary);
+            color: var(--text-inverse);
+            font-weight: var(--weight-medium);
+        }
+
+        .nav-item.active .nav-item__badge {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .nav-item__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+
+        .nav-item.active .nav-item__icon {
+            opacity: 1;
+        }
+
+        .nav-item__text {
+            flex: 1;
+            font-size: var(--text-sm);
+        }
+
+        .nav-item__badge {
+            background: var(--text-primary);
+            color: var(--text-inverse);
+            font-size: var(--text-xs);
+            font-weight: var(--weight-semibold);
+            padding: 2px 6px;
+            border-radius: var(--radius-full);
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar__footer {
+            padding: var(--space-4) var(--space-6);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            transition: background var(--transition-fast);
+        }
+
+        .user-mini:hover {
+            background: var(--bg-secondary);
+        }
+
+        .user-mini__avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--weight-semibold);
+            font-size: var(--text-sm);
+            border: 2px solid var(--border-default);
+        }
+
+        .user-mini__info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-mini__name {
+            font-size: var(--text-sm);
+            font-weight: var(--weight-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-mini__role {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            grid-area: header;
+            position: sticky;
+            top: 0;
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-6);
+            z-index: 40;
+            gap: var(--space-4);
+        }
+
+        .header__left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            flex: 1;
+        }
+
+        .header__menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .header__menu-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .search-bar__input {
+            width: 100%;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid transparent;
+            border-radius: var(--radius-lg);
+            padding: 0 var(--space-4) 0 var(--space-10);
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+
+        .search-bar__input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-bar__input:focus {
+            background: var(--bg-primary);
+            border-color: var(--border-strong);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+        }
+
+        .search-bar__icon {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 18px;
+            height: 18px;
+        }
+
+        .header__right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .icon-btn__badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--text-primary);
+            border-radius: var(--radius-full);
+            border: 2px solid var(--bg-primary);
+        }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main {
+            grid-area: main;
+            padding: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: var(--space-8);
+        }
+
+        .page-header__title {
+            font-size: var(--text-3xl);
+            font-weight: var(--weight-bold);
+            letter-spacing: -0.03em;
+            line-height: var(--leading-tight);
+            margin-bottom: var(--space-2);
+        }
+
+        .page-header__subtitle {
+            font-size: var(--text-base);
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           GRID SYSTEM
+           ============================================ */
+        .dashboard-grid {
+            display: grid;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .dashboard-grid--2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-grid--3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .dashboard-grid--4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* ============================================
+           CARDS
+           ============================================ */
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-default);
+            transform: translateY(-1px);
+        }
+
+        .card--clickable {
+            cursor: pointer;
+        }
+
+        .card--gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--text-primary), var(--text-muted));
+            opacity: 0.1;
+        }
+
+        .card__header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-5);
+        }
+
+        .card__title {
+            font-size: var(--text-sm);
+            font-weight: var(--weight-semibold);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .card__action {
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: var(--space-1);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .card__action:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .card__amount {
+            font-size: var(--text-3xl);
+            font-weight: var(--weight-bold);
+            letter-spacing: -0.02em;
+            line-height: var(--leading-tight);
+            margin-bottom: var(--space-2);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card__amount--positive {
+            color: var(--text-primary);
+        }
+
+        .card__meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+        }
+
+        .card__meta-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+            background: var(--text-muted);
+        }
+
+        .card__meta-indicator--up {
+            background: var(--text-primary);
+        }
+
+        /* ============================================
+           QUICK ACTIONS
+           ============================================ */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-5) var(--space-4);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quick-action:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-default);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .quick-action__icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .quick-action:hover .quick-action__icon {
+            background: var(--text-primary);
+            color: var(--text-inverse);
+        }
+
+        .quick-action__label {
+            font-size: var(--text-sm);
+            font-weight: var(--weight-medium);
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* ============================================
+           PRODUCT CARDS (CARDS/ACCOUNTS)
+           ============================================ */
+        .product-card {
+            position: relative;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--border-default);
+        }
+
+        .product-card__bank {
+            position: absolute;
+            top: var(--space-6);
+            right: var(--space-6);
+            font-size: var(--text-xs);
+            font-weight: var(--weight-semibold);
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .product-card__type {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        .product-card__type-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-card__type-name {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            font-weight: var(--weight-medium);
+        }
+
+        .product-card__balance {
+            font-size: var(--text-2xl);
+            font-weight: var(--weight-bold);
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-1);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .product-card__number {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .product-card__footer {
+            margin-top: var(--space-5);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-card__status {
+            font-size: var(--text-xs);
+            font-weight: var(--weight-semibold);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .product-card__status--active {
+            background: var(--text-primary);
+            color: var(--text-inverse);
+        }
+
+        /* ============================================
+           TRANSACTION LIST
+           ============================================ */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-5);
+        }
+
+        .section-header__title {
+            font-size: var(--text-xl);
+            font-weight: var(--weight-bold);
+            letter-spacing: -0.02em;
+        }
+
+        .section-header__link {
+            font-size: var(--text-sm);
+            font-weight: var(--weight-medium);
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            transition: color var(--transition-fast);
+        }
+
+        .section-header__link:hover {
+            color: var(--text-primary);
+        }
+
+        .tx-list {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .tx-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .tx-item__icon {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+        }
+
+        .tx-item__content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tx-item__title {
+            font-weight: var(--weight-medium);
+            font-size: var(--text-base);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tx-item__meta {
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+        }
+
+        .tx-item__amount {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tx-item__amount-value {
+            font-weight: var(--weight-semibold);
+            font-size: var(--text-base);
+        }
+
+        .tx-item__amount-value--negative {
+            color: var(--text-primary);
+        }
+
+        .tx-item__amount-value--positive {
+            color: var(--text-muted);
+        }
+
+        .tx-item__amount-date {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           BOTTOM NAV (MOBILE)
+           ============================================ */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-subtle);
+            z-index: 50;
+            padding: 0 var(--space-4);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+            list-style: none;
+        }
+
+        .bottom-nav__item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--space-2);
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color var(--transition-fast);
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .bottom-nav__item.active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .bottom-nav__label {
+            font-size: 10px;
+            font-weight: var(--weight-medium);
+        }
+
+        /* ============================================
+           MODAL
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            transform: scale(0.95) translateY(10px);
+            transition: transform var(--transition-base);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal__header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal__title {
+            font-size: var(--text-xl);
+            font-weight: var(--weight-bold);
+        }
+
+        .modal__close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .modal__close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .modal__body {
+            padding: var(--space-6);
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: var(--weight-medium);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 0 var(--space-4);
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            background: var(--bg-primary);
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            width: 100%;
+            height: 52px;
+            background: var(--text-primary);
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            font-weight: var(--weight-semibold);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn--secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn--secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* ============================================
+           EMPTY / PLACEHOLDER STATES
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12) var(--space-6);
+            color: var(--text-muted);
+        }
+
+        .empty-state__icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-4);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state__title {
+            font-size: var(--text-lg);
+            font-weight: var(--weight-semibold);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .empty-state__text {
+            font-size: var(--text-sm);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .dashboard-grid--4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-shell {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main";
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .header__menu-btn {
+                display: flex;
+            }
+
+            .main {
+                padding: var(--space-4);
+                padding-bottom: calc(var(--bottom-nav-height) + var(--space-6));
+            }
+
+            .page-header__title {
+                font-size: var(--text-2xl);
+            }
+
+            .dashboard-grid--2,
+            .dashboard-grid--3,
+            .dashboard-grid--4 {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-3);
+            }
+
+            .quick-action {
+                padding: var(--space-4) var(--space-3);
+            }
+
+            .bottom-nav {
+                display: block;
+            }
+
+            .search-bar {
+                max-width: none;
+            }
+
+            .header {
+                padding: 0 var(--space-4);
+            }
+
+            .tx-item {
+                padding: var(--space-3) var(--space-4);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card__amount {
+                font-size: var(--text-2xl);
+            }
+            .product-card__balance {
+                font-size: var(--text-xl);
+            }
+        }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-in--1 { animation-delay: 0.05s; opacity: 0; }
+        .animate-in--2 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in--3 { animation-delay: 0.15s; opacity: 0; }
+        .animate-in--4 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in--5 { animation-delay: 0.25s; opacity: 0; }
+
+        /* Backdrop for mobile sidebar */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 45;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .sidebar-backdrop.active {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-backdrop.active {
+                display: block;
+            }
+        }
+	</style>
+</head>
+<body>
+
+<div class="app-shell">
+	<!-- SIDEBAR -->
+	<aside class="sidebar" id="sidebar">
+		<div class="sidebar__brand">
+			<div class="sidebar__logo">
+				<i data-lucide="landmark" style="width: 18px; height: 18px;"></i>
+			</div>
+			<span class="sidebar__brand-text">FinWire</span>
+		</div>
+
+		<nav class="sidebar__nav">
+			<div class="sidebar__section">
+				<div class="sidebar__label">Главное</div>
+				<a href="#" class="nav-item active" onclick="setActive(this)">
+					<i data-lucide="layout-dashboard" class="nav-item__icon"></i>
+					<span class="nav-item__text">Обзор</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="arrow-left-right" class="nav-item__icon"></i>
+					<span class="nav-item__text">Переводы</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="receipt" class="nav-item__icon"></i>
+					<span class="nav-item__text">Платежи</span>
+					<span class="nav-item__badge">3</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="pie-chart" class="nav-item__icon"></i>
+					<span class="nav-item__text">Аналитика</span>
+				</a>
+			</div>
+
+			<div class="sidebar__section">
+				<div class="sidebar__label">Продукты</div>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="credit-card" class="nav-item__icon"></i>
+					<span class="nav-item__text">Карты</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="piggy-bank" class="nav-item__icon"></i>
+					<span class="nav-item__text">Накопления</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="trending-up" class="nav-item__icon"></i>
+					<span class="nav-item__text">Инвестиции</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="shield" class="nav-item__icon"></i>
+					<span class="nav-item__text">Страхование</span>
+				</a>
+			</div>
+
+			<div class="sidebar__section">
+				<div class="sidebar__label">Система</div>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="settings" class="nav-item__icon"></i>
+					<span class="nav-item__text">Настройки</span>
+				</a>
+				<a href="#" class="nav-item" onclick="setActive(this)">
+					<i data-lucide="help-circle" class="nav-item__icon"></i>
+					<span class="nav-item__text">Помощь</span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="sidebar__footer">
+			<div class="user-mini">
+				<div class="user-mini__avatar">АК</div>
+				<div class="user-mini__info">
+					<div class="user-mini__name">Алексей К.</div>
+					<div class="user-mini__role">Премиум клиент</div>
+				</div>
+				<i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+			</div>
+		</div>
+	</aside>
+
+	<!-- HEADER -->
+	<header class="header">
+		<div class="header__left">
+			<button class="header__menu-btn" onclick="toggleSidebar()" aria-label="Открыть меню">
+				<i data-lucide="menu" style="width: 20px; height: 20px;"></i>
+			</button>
+			<div class="search-bar">
+				<i data-lucide="search" class="search-bar__icon"></i>
+				<input type="text" class="search-bar__input" placeholder="Поиск по операциям, картам, счетам...">
+			</div>
+		</div>
+		<div class="header__right">
+			<button class="icon-btn" aria-label="Уведомления">
+				<i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+				<span class="icon-btn__badge"></span>
+			</button>
+			<button class="icon-btn" aria-label="Сообщения">
+				<i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+			</button>
+		</div>
+	</header>
+
+	<!-- MAIN -->
+	<main class="main">
+		<div class="page-header animate-in animate-in--1">
+			<h1 class="page-header__title">Добрый вечер, Алексей</h1>
+			<p class="page-header__subtitle">Вот что произошло с вашими финансами сегодня</p>
+		</div>
+
+		<!-- Quick Actions -->
+		<div class="quick-actions animate-in animate-in--2">
+			<button class="quick-action" onclick="openModal()">
+				<div class="quick-action__icon">
+					<i data-lucide="send" style="width: 22px; height: 22px;"></i>
+				</div>
+				<span class="quick-action__label">Перевод</span>
+			</button>
+			<button class="quick-action">
+				<div class="quick-action__icon">
+					<i data-lucide="smartphone" style="width: 22px; height: 22px;"></i>
+				</div>
+				<span class="quick-action__label">Пополнение</span>
+			</button>
+			<button class="quick-action">
+				<div class="quick-action__icon">
+					<i data-lucide="wifi" style="width: 22px; height: 22px;"></i>
+				</div>
+				<span class="quick-action__label">Интернет</span>
+			</button>
+			<button class="quick-action">
+				<div class="quick-action__icon">
+					<i data-lucide="more-horizontal" style="width: 22px; height: 22px;"></i>
+				</div>
+				<span class="quick-action__label">Ещё</span>
+			</button>
+		</div>
+
+		<!-- Stats Cards -->
+		<div class="dashboard-grid dashboard-grid--3 animate-in animate-in--3">
+			<div class="card card--clickable card--gradient">
+				<div class="card__header">
+					<span class="card__title">Общий баланс</span>
+					<div class="card__action">
+						<i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+					</div>
+				</div>
+				<div class="card__amount card__amount--positive">₽ 1 245 800</div>
+				<div class="card__meta">
+					<span class="card__meta-indicator card__meta-indicator--up"></span>
+					<span>+12.5% к прошлому месяцу</span>
+				</div>
+			</div>
+
+			<div class="card card--clickable">
+				<div class="card__header">
+					<span class="card__title">Расходы в мае</span>
+					<div class="card__action">
+						<i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+					</div>
+				</div>
+				<div class="card__amount">₽ 48 320</div>
+				<div class="card__meta">
+					<span class="card__meta-indicator"></span>
+					<span>85% от бюджета</span>
+				</div>
+			</div>
+
+			<div class="card card--clickable">
+				<div class="card__header">
+					<span class="card__title">Кэшбэк начислено</span>
+					<div class="card__action">
+						<i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+					</div>
+				</div>
+				<div class="card__amount">₽ 3 840</div>
+				<div class="card__meta">
+					<span>Будет зачислено 5 июня</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Products -->
+		<div class="section-header animate-in animate-in--4">
+			<h2 class="section-header__title">Мои счета и карты</h2>
+			<a href="#" class="section-header__link">
+				Все продукты
+				<i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+			</a>
+		</div>
+
+		<div class="dashboard-grid dashboard-grid--2 animate-in animate-in--4">
+			<div class="product-card">
+				<span class="product-card__bank">FinWire</span>
+				<div class="product-card__type">
+					<div class="product-card__type-icon">
+						<i data-lucide="credit-card" style="width: 18px; height: 18px;"></i>
+					</div>
+					<span class="product-card__type-name">Дебетовая карта · Black</span>
+				</div>
+				<div class="product-card__balance">₽ 842 500</div>
+				<div class="product-card__number">•••• 4582</div>
+				<div class="product-card__footer">
+					<span class="product-card__status product-card__status--active">Активна</span>
+					<i data-lucide="chevron-right" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+				</div>
+			</div>
+
+			<div class="product-card">
+				<span class="product-card__bank">FinWire</span>
+				<div class="product-card__type">
+					<div class="product-card__type-icon">
+						<i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
+					</div>
+					<span class="product-card__type-name">Накопительный счёт</span>
+				</div>
+				<div class="product-card__balance">₽ 403 300</div>
+				<div class="product-card__number">•••• 7719</div>
+				<div class="product-card__footer">
+					<span class="product-card__status">7.5% годовых</span>
+					<i data-lucide="chevron-right" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+				</div>
+			</div>
+		</div>
+
+		<!-- Transactions -->
+		<div class="section-header animate-in animate-in--5">
+			<h2 class="section-header__title">Последние операции</h2>
+			<a href="#" class="section-header__link">
+				История
+				<i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+			</a>
+		</div>
+
+		<div class="tx-list animate-in animate-in--5">
+			<a href="#" class="tx-item">
+				<div class="tx-item__icon">
+					<i data-lucide="shopping-bag" style="width: 20px; height: 20px;"></i>
+				</div>
+				<div class="tx-item__content">
+					<div class="tx-item__title">Пятёрочка</div>
+					<div class="tx-item__meta">Покупка · Дебетовая карта</div>
+				</div>
+				<div class="tx-item__amount">
+					<div class="tx-item__amount-value tx-item__amount-value--negative">−₽ 1 840</div>
+					<div class="tx-item__amount-date">Сегодня, 14:32</div>
+				</div>
+			</a>
+
+			<a href="#" class="tx-item">
+				<div class="tx-item__icon">
+					<i data-lucide="car" style="width: 20px; height: 20px;"></i>
+				</div>
+				<div class="tx-item__content">
+					<div class="tx-item__title">Яндекс Go</div>
+					<div class="tx-item__meta">Такси · Дебетовая карта</div>
+				</div>
+				<div class="tx-item__amount">
+					<div class="tx-item__amount-value tx-item__amount-value--negative">−₽ 420</div>
+					<div class="tx-item__amount-date">Сегодня, 09:15</div>
+				</div>
+			</a>
+
+			<a href="#" class="tx-item">
+				<div class="tx-item__icon">
+					<i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+				</div>
+				<div class="tx-item__content">
+					<div class="tx-item__title">ООО «ТехноСофт»</div>
+					<div class="tx-item__meta">Зачисление · Зарплата</div>
+				</div>
+				<div class="tx-item__amount">
+					<div class="tx-item__amount-value tx-item__amount-value--positive">+₽ 185 000</div>
+					<div class="tx-item__amount-date">Вчера, 10:00</div>
+				</div>
+			</a>
+
+			<a href="#" class="tx-item">
+				<div class="tx-item__icon">
+					<i data-lucide="smartphone" style="width: 20px; height: 20px;"></i>
+				</div>
+				<div class="tx-item__content">
+					<div class="tx-item__title">МТС</div>
+					<div class="tx-item__meta">Мобильная связь · Автоплатёж</div>
+				</div>
+				<div class="tx-item__amount">
+					<div class="tx-item__amount-value tx-item__amount-value--negative">−₽ 650</div>
+					<div class="tx-item__amount-date">Вчера, 08:00</div>
+				</div>
+			</a>
+
+			<a href="#" class="tx-item">
+				<div class="tx-item__icon">
+					<i data-lucide="coffee" style="width: 20px; height: 20px;"></i>
+				</div>
+				<div class="tx-item__content">
+					<div class="tx-item__title">Starbucks</div>
+					<div class="tx-item__meta">Рестораны · Дебетовая карта</div>
+				</div>
+				<div class="tx-item__amount">
+					<div class="tx-item__amount-value tx-item__amount-value--negative">−₽ 380</div>
+					<div class="tx-item__amount-date">3 мая, 16:45</div>
+				</div>
+			</a>
+		</div>
+	</main>
+</div>
+
+<!-- Mobile Sidebar Backdrop -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
+<!-- Bottom Nav (Mobile) -->
+<nav class="bottom-nav">
+	<div class="bottom-nav__list">
+		<button class="bottom-nav__item active">
+			<i data-lucide="layout-dashboard" class="bottom-nav__icon"></i>
+			<span class="bottom-nav__label">Главная</span>
+		</button>
+		<button class="bottom-nav__item">
+			<i data-lucide="arrow-left-right" class="bottom-nav__icon"></i>
+			<span class="bottom-nav__label">Переводы</span>
+		</button>
+		<button class="bottom-nav__item">
+			<i data-lucide="receipt" class="bottom-nav__icon"></i>
+			<span class="bottom-nav__label">Платежи</span>
+		</button>
+		<button class="bottom-nav__item">
+			<i data-lucide="pie-chart" class="bottom-nav__icon"></i>
+			<span class="bottom-nav__label">Ещё</span>
+		</button>
+	</div>
+</nav>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+	<div class="modal">
+		<div class="modal__header">
+			<h3 class="modal__title">Новый перевод</h3>
+			<button class="modal__close" onclick="closeModal()">
+				<i data-lucide="x" style="width: 18px; height: 18px;"></i>
+			</button>
+		</div>
+		<div class="modal__body">
+			<div class="form-group">
+				<label class="form-label">Получатель</label>
+				<input type="text" class="form-input" placeholder="По номеру телефона, карте или счёту">
+			</div>
+			<div class="form-group">
+				<label class="form-label">Сумма</label>
+				<input type="text" class="form-input" placeholder="₽ 0.00">
+			</div>
+			<div class="form-group">
+				<label class="form-label">Сообщение получателю</label>
+				<input type="text" class="form-input" placeholder="Необязательно">
+			</div>
+			<button class="btn">
+				<span>Продолжить</span>
+				<i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Init icons
+	lucide.createIcons();
+
+	// Sidebar toggle
+	function toggleSidebar() {
+		const sidebar = document.getElementById('sidebar');
+		const backdrop = document.getElementById('sidebarBackdrop');
+		sidebar.classList.toggle('open');
+		backdrop.classList.toggle('active');
+	}
+
+	// Active nav state
+	function setActive(element) {
+		document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+		element.classList.add('active');
+		if (window.innerWidth <= 768) toggleSidebar();
+	}
+
+	// Modal
+	function openModal() {
+		document.getElementById('modal').classList.add('active');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function closeModal() {
+		document.getElementById('modal').classList.remove('active');
+		document.body.style.overflow = '';
+	}
+
+	// Close modal on backdrop click
+	document.getElementById('modal').addEventListener('click', function(e) {
+		if (e.target === this) closeModal();
+	});
+
+	// Close modal on Escape
+	document.addEventListener('keydown', function(e) {
+		if (e.key === 'Escape') closeModal();
+	});
+
+	// Bottom nav active state
+	document.querySelectorAll('.bottom-nav__item').forEach(item => {
+		item.addEventListener('click', function() {
+			document.querySelectorAll('.bottom-nav__item').forEach(i => i.classList.remove('active'));
+			this.classList.add('active');
+		});
+	});
+</script>
+</body>
+</html>

@@ -55,7 +55,7 @@ function parseQuery(request: NextRequest): Result<QueryParams, ApiError> {
 			ok: false,
 			error: {
 				code: ErrorCode.BAD_REQUEST,
-				message: `Ожидаемый "type". Ожидаемый: ${Object.values(TransactionType).join(', ')}`,
+				message: `Неверный "type". Ожидаемый: ${Object.values(TransactionType).join(', ')}`,
 				status: 400
 			}
 		}
@@ -103,44 +103,58 @@ function parseQuery(request: NextRequest): Result<QueryParams, ApiError> {
 }
 
 export async function GET(request: NextRequest) {
-	const user = await getCurrentUser()
-	if (!user) {
-		return NextResponse.json(
-			{
-				code: ErrorCode.AUTH,
-				message: 'Неавторизованный',
-				status: 401
-			},
-			{ status: 401 }
-		)
-	}
+	try {
+		const user = await getCurrentUser()
+		if (!user) {
+			return NextResponse.json(
+				{
+					code: ErrorCode.AUTH,
+					message: 'Неавторизованный',
+					status: 401
+				},
+				{ status: 401 }
+			)
+		}
 
-	const parsed = parseQuery(request)
-	if (!parsed.ok) {
-		return NextResponse.json(parsed.error, { status: parsed.error.status })
-	}
+		const parsed = parseQuery(request)
+		if (!parsed.ok) {
+			return NextResponse.json(parsed.error, {
+				status: parsed.error.status
+			})
+		}
 
-	const transactions = await prisma.transaction.findMany({
-		where: {
-			account: { userId: user.id },
-			...(parsed.data.categoryId && {
-				categoryId: parsed.data.categoryId
-			}),
-			...(parsed.data.type && { type: parsed.data.type }),
-			...(parsed.data.from || parsed.data.to
-				? {
-						createdAt: {
-							...(parsed.data.from && { gte: parsed.data.from }),
-							...(parsed.data.to && { lte: parsed.data.to })
+		const transactions = await prisma.transaction.findMany({
+			where: {
+				account: { userId: user.id },
+				...(parsed.data.categoryId && {
+					categoryId: parsed.data.categoryId
+				}),
+				...(parsed.data.type && { type: parsed.data.type }),
+				...(parsed.data.from || parsed.data.to
+					? {
+							createdAt: {
+								...(parsed.data.from && {
+									gte: parsed.data.from
+								}),
+								...(parsed.data.to && { lte: parsed.data.to })
+							}
 						}
-					}
-				: {})
-		},
-		take: parsed.data.limit,
-		orderBy: { createdAt: 'desc' }
-	})
+					: {})
+			},
+			take: parsed.data.limit,
+			orderBy: { createdAt: 'desc' }
+		})
 
-	return NextResponse.json({ transactions })
+		return NextResponse.json({ transactions })
+	} catch (error) {
+		console.error('[TRANSACTIONS_GET] Ошибка сервера', error)
+		const apiError: ApiError = {
+			code: ErrorCode.SERVER,
+			message: 'Ошибка сервера',
+			status: 500
+		}
+		return NextResponse.json(apiError, { status: apiError.status })
+	}
 }
 
 export async function POST(request: NextRequest) {
