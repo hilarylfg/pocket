@@ -1,11 +1,14 @@
 import {
 	ArrowLeftRight,
+	Bell,
 	ChevronRight,
 	CreditCard,
 	LayoutDashboard,
+	MessageCircle,
 	PieChart,
 	PiggyBank,
 	Receipt,
+	Search,
 	Shield,
 	TrendingUp,
 	Wallet
@@ -15,115 +18,58 @@ import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
+	Button,
+	Input,
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
 	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuBadge,
-	SidebarMenuButton,
-	SidebarMenuItem,
+	SidebarNavMenu,
 	SidebarProvider
 } from '@/src/components'
 import { userService } from '@/src/services'
 
 const mainNav = [
-	{ title: 'Обзор', icon: LayoutDashboard, url: '#', isActive: true },
-	{ title: 'Переводы', icon: ArrowLeftRight, url: '#' },
-	{ title: 'Платежи', icon: Receipt, url: '#', badge: '3' },
-	{ title: 'Аналитика', icon: PieChart, url: '#' }
+	{ title: 'Обзор', Icon: LayoutDashboard, url: '#', isActive: true },
+	{ title: 'Переводы', Icon: ArrowLeftRight, url: '#' },
+	{ title: 'Платежи', Icon: Receipt, url: '#', badge: '3' },
+	{ title: 'Аналитика', Icon: PieChart, url: '#' }
 ]
 
 const productsNav = [
-	{ title: 'Карты', icon: CreditCard, url: '#' },
-	{ title: 'Накопления', icon: PiggyBank, url: '#' },
-	{ title: 'Инвестиции', icon: TrendingUp, url: '#' },
-	{ title: 'Страхование', icon: Shield, url: '#' }
+	{ title: 'Карты', Icon: CreditCard, url: '#' },
+	{ title: 'Накопления', Icon: PiggyBank, url: '#' },
+	{ title: 'Инвестиции', Icon: TrendingUp, url: '#' },
+	{ title: 'Страхование', Icon: Shield, url: '#' }
 ]
 
 export default async function Home() {
-	const user = await userService.findProfile('cmmjfxopm000b1shicsi3d42y')
+	const user = await userService.findProfile('cmmj8b663000beoesb74gm8h1')
 
 	return (
-		<div className='flex h-dvh items-center justify-center bg-zinc-300 font-sans dark:bg-black'>
+		<div className='flex h-dvh bg-secondary font-sans'>
 			<SidebarProvider>
 				<Sidebar
-					variant='sidebar'
+					className='bg-background border-r border-solid'
 					collapsible='none'
-					className='bg-white p-3'
 				>
-					<SidebarHeader>
+					<SidebarHeader className='p-4 border-b border-solid'>
 						<div className='flex items-center gap-3'>
-							<div className='flex h-8 w-8 items-center justify-center rounded-md bg-black text-white'>
+							<div className='flex size-8 items-center justify-center rounded-md bg-foreground text-primary-foreground'>
 								<Wallet className='size-5' />
 							</div>
-							<span className='text-2xl font-bold text-black'>
+							<span className='text-l font-bold text-primary'>
 								pocket
 							</span>
 						</div>
 					</SidebarHeader>
 
 					<SidebarContent>
-						<SidebarGroup>
-							<SidebarGroupLabel className='px-2 text-[11px] font-semibold uppercase text-gray-400'>
-								Главное
-							</SidebarGroupLabel>
-							<SidebarGroupContent>
-								<SidebarMenu className='gap-1.5'>
-									{mainNav.map(item => (
-										<SidebarMenuItem key={item.title}>
-											<SidebarMenuButton
-												isActive={item.isActive}
-												className='group relative h-auto gap-3 rounded-[10px] px-3 py-2 text-[#525252] transition-all duration-150 hover:bg-[#f5f5f5] hover:text-[#0a0a0a] data-[active=true]:bg-[#0a0a0a] data-[active=true]:font-medium data-[active=true]:text-white data-[active=true]:hover:bg-[#0a0a0a] data-[active=true]:hover:text-white'
-											>
-												<a
-													href={item.url}
-													className='flex items-center gap-3'
-												>
-													<item.icon className='h-5 w-5 shrink-0 opacity-70 group-data-[active=true]:opacity-100' />
-													<span className='flex-1 text-[13px]'>
-														{item.title}
-													</span>
-												</a>
-											</SidebarMenuButton>
-											{item.badge && (
-												<SidebarMenuBadge className='absolute right-3 top-1/2 bg-[#0a0a0a] text-white text-[11px] font-semibold px-1.5 py-0.5 rounded-full min-w-[18px] text-center group-data-[active=true]:bg-white group-data-[active=true]:text-[#0a0a0a]'>
-													{item.badge}
-												</SidebarMenuBadge>
-											)}
-										</SidebarMenuItem>
-									))}
-								</SidebarMenu>
-							</SidebarGroupContent>
-						</SidebarGroup>
-
-						<SidebarGroup>
-							<SidebarGroupLabel className='px-3 text-[11px] font-semibold uppercase text-gray-400'>
-								Продукты
-							</SidebarGroupLabel>
-							<SidebarGroupContent>
-								<SidebarMenu className='gap-0.5'>
-									{productsNav.map(item => (
-										<SidebarMenuItem key={item.title}>
-											<SidebarMenuButton className='group h-auto gap-3 rounded-[10px] px-3 py-3 text-[#525252] transition-all duration-150 hover:bg-[#f5f5f5] hover:text-[#0a0a0a]'>
-												<a
-													href={item.url}
-													className='flex items-center gap-3'
-												>
-													<item.icon className='h-5 w-5 shrink-0 opacity-70' />
-													<span className='flex-1 text-[13px]'>
-														{item.title}
-													</span>
-												</a>
-											</SidebarMenuButton>
-										</SidebarMenuItem>
-									))}
-								</SidebarMenu>
-							</SidebarGroupContent>
-						</SidebarGroup>
+						<SidebarNavMenu titleTab='Главное' tabs={mainNav} />
+						<SidebarNavMenu
+							titleTab='Продукты'
+							tabs={productsNav}
+						/>
 					</SidebarContent>
 					<SidebarFooter>
 						<div className='flex cursor-pointer items-center gap-3 rounded-[10px] p-2 transition-colors duration-150 hover:bg-[#f5f5f5]'>
@@ -144,6 +90,23 @@ export default async function Home() {
 					</SidebarFooter>
 				</Sidebar>
 			</SidebarProvider>
+			<div className='w-full h-[65px] border-b border-solid bg-background flex items-center px-8'>
+				<div className='flex items-center relative w-full max-w-120'>
+					<Search className='absolute size-4 left-3 top-1/2 -translate-y-1/2' />
+					<Input
+						className='pl-9 py-5'
+						placeholder='Поиск по операциям, картам, счетам...'
+					/>
+				</div>
+				<div className='flex ml-auto items-center gap-2'>
+					<Button variant='ghost' className='size-10'>
+						<Bell className='size-5' />
+					</Button>
+					<Button variant='ghost' className='size-10'>
+						<MessageCircle className='size-5' />
+					</Button>
+				</div>
+			</div>
 		</div>
 	)
 }
